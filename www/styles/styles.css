@@ -1,0 +1,107 @@
+/* Basic Reset */
+body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+
+/* Header & Nav */
+.app-header { background-color: #2E8B57; color: white; padding: 1rem; text-align: center; }
+.app-nav { background-color: #3CB371; padding: 10px; display: flex; justify-content: center; gap: 10px; }
+.nav-btn { padding: 10px 20px; background: none; border: none; color: white; cursor: pointer; font-size: 1rem; font-weight: bold; }
+.nav-btn:hover, .nav-btn.active { background-color: rgba(255,255,255,0.3); border-radius: 5px; }
+
+/* Main Container */
+#main-container { padding: 20px; min-height: 60vh; }
+
+/* Category Grid */
+.category-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.category-card {
+    border: 2px solid #2E8B57;
+    border-radius: 10px;
+    width: 150px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.category-card:hover {
+    transform: scale(1.05);
+    background-color: #f0fdf4;
+}
+
+.app-footer { background-color: #2E8B57; color: white; text-align: center; padding: 10px; position: fixed; bottom: 0; width: 100%; }
+
+/* Orchid Grid Layout */
+.orchid-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.orchid-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.orchid-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.card-img-container {
+    height: 200px;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f9f9f9;
+}
+
+.card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures photos cover the box without stretching */
+}
+
+.card-info {
+    padding: 15px;
+    text-align: center;
+}
+
+.card-subtitle {
+    color: #666;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+.card-actions {
+    padding: 10px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-around;
+    background-color: #fafafa;
+}
+
+.action-btn {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.btn-edit { background-color: #fff3cd; color: #856404; border-color: #ffeeba; }
+.btn-delete { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
