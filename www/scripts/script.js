@@ -57,7 +57,8 @@ function buildLayout() {
         createNavBtn('Temperaturas', 'temperature'),
         createNavBtn('Humidades', 'humidity'),
         createNavBtn('Tamanhos', 'size'),
-        createNavBtn('Todas', 'all')
+        createNavBtn('Todas', 'all'),
+        createNavBtn('Sobre', 'about')
     ]);
 
     //Main Container
@@ -103,6 +104,10 @@ function showView(viewName) {
         
         case 'all':
             renderOrchidGallery(main, manager.orchids, "Todas as Orquídeas");
+            break;
+
+        case 'about': 
+            renderAboutView(main);
             break;
 
         default:
@@ -161,6 +166,10 @@ function renderOrchidGallery(container, orchidList, title) {
     //Set Title
     container.appendChild(toDom('h2', { className: 'view-title' }, [title]));
 
+    const createBtn = toDom('button', { className: 'create-btn' }, ['+ Create New Orchid']);
+    createBtn.addEventListener('click', () => renderOrchidForm(container));
+    container.appendChild(createBtn);
+
     //Create Grid
     const grid = toDom('div', { className: 'orchid-grid' });
 
@@ -187,11 +196,26 @@ function renderOrchidGallery(container, orchidList, title) {
             ]),
             // Action Buttons (Placeholder for Edit/Delete)
             toDom('div', { className: 'card-actions' }, [
-                createActionButton('Edit', 'btn-edit', () => console.log('Edit', orchid.id)),
+                createActionButton('Edit', 'btn-edit', (e) => {
+                e.stopPropagation();
+                // Call the form with the current orchid object
+                renderOrchidForm(container, orchid); 
+            }),
                 createActionButton('Delete', 'btn-delete', (e) => {
-                    e.stopPropagation(); //Prevent triggering card click
-                    console.log('Delete', orchid.id);
-                })
+                        e.stopPropagation(); // Prevents opening the card details if we click delete
+                        
+                        // 1. Confirm with the user
+                        if (confirm('Are you sure you want to delete this orchid?')) {
+                            
+                            // 2. Remove from data
+                            manager.removeOrchid(orchid.id);
+                            
+                            // 3. Refresh the view to show the item is gone
+                            // We get the main container again to be safe
+                            const main = document.getElementById('main-container');
+                            renderOrchidGallery(main, manager.orchids, "Todas as Orquídeas");
+                        }
+                    })
             ])
         ]);
 
@@ -208,4 +232,198 @@ function createActionButton(text, className, onClick) {
     const btn = toDom('button', { className: `action-btn ${className}` }, [text]);
     btn.addEventListener('click', onClick);
     return btn;
+}
+
+/**
+ * Renders the Form for Creating or Editing an Orchid
+ */
+function renderOrchidForm(container, orchidToEdit = null) {
+    container.replaceChildren();
+
+    const title = orchidToEdit ? `Edit Orchid: ${orchidToEdit.name}` : "Create New Orchid";
+    container.appendChild(toDom('h2', { className: 'view-title' }, [title]));
+
+    // 1. Create Form Element
+    const form = toDom('form', { className: 'orchid-form', novalidate: true });
+
+    // 2. Name Input
+    form.appendChild(createInputBlock('Name:', 'name', 'text', orchidToEdit?.name, true));
+
+    // 3. Image URL Input
+    form.appendChild(createInputBlock('Photo URL:', 'src', 'text', orchidToEdit?.src || 'images/orchids/', true));
+
+    // 4. Dynamic Selects for Characteristics
+    // note: We use ?.id to safely get the ID only if orchidToEdit exists
+    form.appendChild(createSelectBlock('Genus:', 'genus', manager.genusList, orchidToEdit?.genus?.id));
+    form.appendChild(createSelectBlock('Type:', 'type', manager.typeList, orchidToEdit?.type?.id));
+    form.appendChild(createSelectBlock('Luminosity:', 'luminosity', manager.luminosityList, orchidToEdit?.luminosity?.id));
+    form.appendChild(createSelectBlock('Temperature:', 'temperature', manager.temperatureList, orchidToEdit?.temperature?.id));
+    form.appendChild(createSelectBlock('Humidity:', 'humidity', manager.humidityList, orchidToEdit?.humidity?.id));
+    form.appendChild(createSelectBlock('Size:', 'size', manager.sizeList, orchidToEdit?.size?.id));
+
+    // 5. Submit Button
+    const submitBtn = toDom('button', { type: 'submit', className: 'form-btn' }, ['Save Orchid']);
+    form.appendChild(submitBtn);
+
+    // 6. Handle Submission
+    form.addEventListener('submit', (e) => handleFormSubmit(e, form, orchidToEdit));
+
+    container.appendChild(form);
+}
+
+/**
+ * Helper to create a label + input group
+ */
+function createInputBlock(labelText, name, type, value = '', required = false) {
+    const wrapper = toDom('div', { className: 'form-group' });
+    wrapper.appendChild(toDom('label', { for: name }, [labelText]));
+    
+    // Create the input
+    const input = toDom('input', { id: name, name: name, type: type });
+    
+    // Set value if it exists
+    if (value) {
+        input.value = value;
+    }
+
+    // Set required if true
+    if (required) {
+        input.required = true;
+    }
+    
+    wrapper.appendChild(input);
+    return wrapper;
+}
+
+/**
+ * Helper to create a label + select group
+ */
+function createSelectBlock(labelText, name, optionsList, selectedId = null) {
+    const wrapper = toDom('div', { className: 'form-group' });
+    wrapper.appendChild(toDom('label', { for: name }, [labelText]));
+
+    const select = toDom('select', { id: name, name: name, required: true });
+    
+    // Default empty option
+    select.appendChild(toDom('option', { value: '' }, ['-- Select --']));
+
+    // Populate options
+    if (optionsList && Array.isArray(optionsList)) {
+        optionsList.forEach(item => {
+            const optionAttrs = { value: item.id };
+            
+            // Check if this option is the selected one (using loose equality == for string/number match)
+            if (selectedId != null && item.id == selectedId) {
+                optionAttrs.selected = true;
+            }
+            
+            select.appendChild(toDom('option', optionAttrs, [item.description]));
+        });
+    }
+
+    wrapper.appendChild(select);
+    return wrapper;
+}
+
+function handleFormSubmit(e, form, orchidToEdit) {
+    e.preventDefault(); 
+    console.log("--- START FORM SUBMISSION ---");
+
+    // 1. Check if Form Element exists
+    if (!form) {
+        console.error("CRITICAL: Form element is undefined.");
+        return;
+    }
+
+    // 2. Validate HTML5 Constraints
+    if (!form.checkValidity()) {
+        console.warn("Form is invalid (HTML5 checks failed).");
+        form.reportValidity();
+        return;
+    }
+
+    // 3. Log Raw Input Values (To see if Selects are working)
+    const rawGenus = form.elements['genus'].value;
+    console.log("Raw Genus Value:", rawGenus); // Should be a number like "1", "2"
+
+    // 4. Gather Data
+    const formData = {
+        name: form.elements['name'].value,
+        src: form.elements['src'].value,
+        genus: parseInt(form.elements['genus'].value),
+        type: parseInt(form.elements['type'].value),
+        luminosity: parseInt(form.elements['luminosity'].value),
+        temperature: parseInt(form.elements['temperature'].value),
+        humidity: parseInt(form.elements['humidity'].value),
+        size: parseInt(form.elements['size'].value)
+    };
+
+    console.log("Processed Form Data:", formData);
+
+    // 5. Check for NaNs (Not a Number)
+    if (isNaN(formData.genus)) {
+        console.error("ERROR: Genus is NaN. Did you select an option?");
+        alert("Please select all options.");
+        return;
+    }
+
+    try {
+        if (orchidToEdit) {
+            console.log("Mode: EDIT");
+            manager.updateOrchid(orchidToEdit.id, formData);
+        } else {
+            console.log("Mode: CREATE");
+            
+            // Find objects (and log if they are found)
+            const genusObj = manager.genusList.find(x => x.id == formData.genus);
+            console.log("Found Genus Object:", genusObj);
+
+            const newOrchid = new Orchid(
+                0, // Temp ID
+                formData.name,
+                formData.src,
+                genusObj,
+                manager.typeList.find(x => x.id == formData.type),
+                manager.luminosityList.find(x => x.id == formData.luminosity),
+                manager.temperatureList.find(x => x.id == formData.temperature),
+                manager.humidityList.find(x => x.id == formData.humidity),
+                manager.sizeList.find(x => x.id == formData.size)
+            );
+            
+            console.log("New Orchid Object created:", newOrchid);
+
+            // Attempt to add to Manager
+            manager.addOrchid(newOrchid);
+            console.log("SUCCESS: Added to manager. Total Orchids:", manager.orchids.length);
+        }
+
+        // Refresh View
+        const main = document.getElementById('main-container');
+        renderOrchidGallery(main, manager.orchids, "Todas as Orquídeas");
+
+    } catch (error) {
+        console.error("CRITICAL ERROR inside Try/Catch:", error);
+        alert("Error: " + error.message);
+    }
+}
+
+/**
+ * Renders the About View (Static Content)
+ */
+function renderAboutView(container) {
+    container.replaceChildren();
+    
+    container.appendChild(toDom('h2', { className: 'view-title' }, ['Sobre o Projeto']));
+
+    const content = toDom('div', { className: 'about-content' }, [
+        toDom('p', {}, ['Este projeto foi desenvolvido no âmbito da disciplina de Programação Web.']),
+        toDom('h3', {}, ['Autores:']),
+        toDom('ul', { className: 'authors-list' }, [
+            toDom('li', {}, ['Seu Nome Aqui - Nº de Estudante']),
+            toDom('li', {}, ['Nome do Colega (se houver)'])
+        ]),
+        toDom('p', { className: 'tech-stack' }, ['Tecnologias: HTML, CSS, JavaScript (DOM Manually)'])
+    ]);
+
+    container.appendChild(content);
 }

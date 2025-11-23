@@ -2,21 +2,22 @@
  * 1. ENTITY CLASS
  */
 class Entity {
-
     #id;
 
     constructor(id) {
-        if (!id) throw new Error("ID is required for an Entity."); //Ensure id is there
-            this.#id = id;
+        // FIX: We check strictly for null or undefined, so '0' is allowed
+        if (id === undefined || id === null) {
+             throw new Error("ID is required for an Entity.");
+        }
+        this.#id = id;
     }
 
-    get id() {
-        return this.#id;
-    }
+    // ... keep the rest of the class the same (getters/setters) ...
+    get id() { return this.#id; }
 
     set id(newId) {
         if (this.#id !== 0 && this.#id !== null && this.#id !== undefined) {
-             console.warn("Warning: You are overwriting an existing ID.");
+             console.warn(`Warning: Overwriting ID ${this.#id} with ${newId}.`);
         }
         this.#id = newId;
     }
@@ -153,26 +154,71 @@ class OrchidManager {
     get humidityList() { return this.#humidityList; }
     get sizeList() { return this.#sizeList; }
 
+    /**
+     * Adds a new Orchid.
+     */
     addOrchid(newOrchid) {
+        console.log("--> Manager: Attempting to add orchid...", newOrchid.name);
+
+        // 1. Check uniqueness
         const exists = this.#orchids.some(o => o.name.toLowerCase() === newOrchid.name.toLowerCase());
         if (exists) {
-            throw new Error("An orchid with this name already exists."); // [cite: 7280]
+            console.error("--> Manager: Duplicate found!");
+            throw new Error("An orchid with this name already exists."); 
         }
 
-
-    }
-
-    removeOrchid(id) {
-        const index = this.#orchids.findIndex(o => o.id === id);
-        if (index !== -1) {
-            this.#orchids.splice(index, 1);
-        }
-
+        // 2. Generate ID
         const maxId = this.#orchids.reduce((max, orchid) => (orchid.id > max ? orchid.id : max), 0);
         const newId = maxId + 1;
-        newOrchid.id = newId;
+        
+        console.log("--> Manager: Generated new ID:", newId);
+        
+        // 3. Set ID on the object
+        newOrchid.id = newId; 
 
+        // 4. Push to collection (THIS IS THE CRITICAL STEP)
         this.#orchids.push(newOrchid);
+        
+        console.log("--> Manager: Pushed to list. New Count:", this.#orchids.length);
+    }
+
+    /**
+     * Updates an existing Orchid.
+     * @param {number} id - The ID of the orchid to update
+     * @param {object} newDetails - Object containing the new raw values (from form)
+     */
+    updateOrchid(id, newDetails) {
+        const orchid = this.#orchids.find(o => o.id === id);
+        if (!orchid) throw new Error(`Orchid with ID ${id} not found.`);
+
+        // Update simple properties
+        orchid.name = newDetails.name;
+        orchid.src = newDetails.src;
+
+        // Update characteristics (We must find the objects again based on the new IDs)
+        // Note: In a real app, we might helperize this lookup logic to avoid repetition
+        if (newDetails.genus) orchid.genus = this.#genusList.find(x => x.id == newDetails.genus);
+        if (newDetails.type) orchid.type = this.#typeList.find(x => x.id == newDetails.type);
+        if (newDetails.luminosity) orchid.luminosity = this.#luminosityList.find(x => x.id == newDetails.luminosity);
+        if (newDetails.temperature) orchid.temperature = this.#temperatureList.find(x => x.id == newDetails.temperature);
+        if (newDetails.humidity) orchid.humidity = this.#humidityList.find(x => x.id == newDetails.humidity);
+        if (newDetails.size) orchid.size = this.#sizeList.find(x => x.id == newDetails.size);
+    }
+
+    /**
+     * Removes an Orchid by ID.
+     */
+    removeOrchid(id) {
+        // Find the index of the orchid with this ID
+        const index = this.#orchids.findIndex(o => o.id === id); 
+        
+        if (index !== -1) {
+            // Remove 1 item at that index
+            this.#orchids.splice(index, 1); 
+            console.log(`Manager: Removed orchid with ID ${id}. Remaining: ${this.#orchids.length}`);
+        } else {
+            console.warn(`Manager: Orchid with ID ${id} not found.`);
+        }
     }
 
     getByCategory(categoryName, characteristicId) {
