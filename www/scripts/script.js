@@ -566,7 +566,7 @@ function renderOrchidDetails(container, orchid) {
 }
 
 /**
- * Helper para criar linhas de detalhe (Label: Valor)
+ * Helper para criar linhas de detalhe
  */
 function createDetailItem(label, value) {
     return toDom('p', { className: 'detail-item' }, [
