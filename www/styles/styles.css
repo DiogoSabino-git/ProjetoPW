@@ -56,31 +56,37 @@ body {
     padding: 15px;
 }
 
-/* Orchid Grid Layout */
+/* Grelha de Orquídeas */
 .orchid-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+    gap: 15px;
+    padding: 10px 0;
 }
 
+/* Cartão (Versão Apenas Texto) */
 .orchid-card {
     background: white;
-    border: 1px solid #ddd;
+    border: 1px solid #e0e0e0; /* Borda subtil */
     border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
+    padding: 20px 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     
-    /* FIX: Flexbox to handle internal spacing */
+    /* Centralizar o texto verticalmente e horizontalmente */
     display: flex;
-    flex-direction: column;
-    height: 100%; /* Forces card to fill the full height of the grid row */
+    align-items: center;
+    justify-content: center;
+    min-height: 80px; /* Altura fixa para ficarem uniformes */
 }
 
 .orchid-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(46, 139, 87, 0.2); /* Sombra verde suave */
+    border-color: #2E8B57;
+    background-color: #f9fff9;
 }
 
 .card-img-container {
@@ -107,17 +113,17 @@ body {
     justify-content: flex-start;
 }
 
+/* Ajustes do Texto */
 .card-info h3 {
     margin: 0;
-    margin-bottom: 5px;
     font-size: 1.1rem;
-    
-    /* FIX: Limit text to exactly 2 lines. If longer, show "..." */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    height: 2.4em; /* Enforce a fixed height for alignment */
+    color: #333;
+    font-weight: normal;
+}
+
+.orchid-card:hover .card-info h3 {
+    color: #2E8B57;
+    font-weight: bold;
 }
 
 .card-subtitle {
@@ -325,4 +331,82 @@ body {
     .team-grid {
         gap: 40px; /* Menos espaço entre autores */
     }
+}
+
+/* --- Página de Detalhes --- */
+.back-btn {
+    background: none;
+    border: none;
+    color: #2E8B57;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.back-btn:hover {
+    text-decoration: underline;
+}
+
+.details-wrapper {
+    display: flex;
+    flex-wrap: wrap; /* Para telemóvel: passa para coluna se não couber */
+    gap: 40px;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.details-image-col {
+    flex: 1;
+    min-width: 300px; /* Largura mínima da imagem */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.details-img {
+    width: 100%;
+    max-width: 500px; /* Impede que fique gigante */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    object-fit: cover;
+}
+
+.details-info-col {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.details-title {
+    color: #2E8B57;
+    font-size: 2.5rem;
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.detail-item {
+    font-size: 1.1rem;
+    margin: 10px 0;
+    color: #555;
+    border-bottom: 1px dashed #eee; /* Linha subtil entre itens */
+    padding-bottom: 5px;
+}
+
+.detail-item strong {
+    color: #333;
+    width: 150px;
+    display: inline-block; /* Alinha os valores verticalmente */
+}
+
+.details-actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
 }

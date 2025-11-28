@@ -160,64 +160,37 @@ function renderCategoryView(container, categoryType) {
 }
 
 function renderOrchidGallery(container, orchidList, title) {
-    //Clear container
     container.replaceChildren();
-
-    //Set Title
+    
+    // Título
     container.appendChild(toDom('h2', { className: 'view-title' }, [title]));
 
     const createBtn = toDom('button', { className: 'create-btn' }, ['Adicionar Orquídea']);
     createBtn.addEventListener('click', () => renderOrchidForm(container));
     container.appendChild(createBtn);
 
-    //Create Grid
+    // Grelha
     const grid = toDom('div', { className: 'orchid-grid' });
 
     if (orchidList.length === 0) {
-        container.appendChild(toDom('p', { className: 'no-data' }, ['No orchids found in this category.']));
+        container.appendChild(toDom('p', { className: 'no-data' }, ['Nenhuma orquídea encontrada.']));
         return;
     }
 
-    //Loop and Create Cards
     orchidList.forEach(orchid => {
-        const card = toDom('div', { className: 'orchid-card' }, [
-            //Image Container
-            toDom('div', { className: 'card-img-container' }, [
-                toDom('img', { 
-                    src: orchid.src, 
-                    alt: orchid.name,
-                    className: 'card-img'
-                })
-            ]),
-            // Info Container
-            toDom('div', { className: 'card-info' }, [
-                toDom('h3', {}, [orchid.name]),
-                toDom('p', { className: 'card-subtitle' }, [orchid.genus.description])
-            ]),
-            // Action Buttons
-            toDom('div', { className: 'card-actions' }, [
-                createActionButton('Editar', 'btn-edit', (e) => {
-                e.stopPropagation();
-                // Call the form with the current orchid object
-                renderOrchidForm(container, orchid); 
-            }),
-                createActionButton('Apagar', 'btn-delete', (e) => {
-                        e.stopPropagation();
-                        
-                        //Confirm with the user
-                        if (confirm('Are you sure you want to delete this orchid?')) {
-                            
-                            //Remove from data
-                            manager.removeOrchid(orchid.id);
-                            
-                            //Refresh the view to show the item is gone
-                            const main = document.getElementById('main-container');
-                            renderOrchidGallery(main, manager.orchids, "Todas as Orquídeas");
-                        }
-                    })
-            ])
+        // O cartão é agora apenas um bloco de texto clicável
+        const card = toDom('div', { className: 'orchid-card text-only' }); // Adicionei classe 'text-only' para ajudar no CSS
+        
+        card.addEventListener('click', () => {
+            renderOrchidDetails(container, orchid);
+        });
+
+        // Apenas o Nome (Sem Imagem)
+        const infoContainer = toDom('div', { className: 'card-info' }, [
+            toDom('h3', {}, [orchid.name])
         ]);
 
+        card.appendChild(infoContainer);
         grid.appendChild(card);
     });
 
@@ -464,4 +437,64 @@ function renderAboutView(container) {
  */
 function createSocialLink(label, url) {
     return toDom('a', { href: url, target: '_blank', className: 'social-link' }, [label]);
+}
+
+/**
+ * Renders the Full Details View for a specific Orchid
+ */
+function renderOrchidDetails(container, orchid) {
+    container.replaceChildren();
+
+    // 1. Botão de Voltar
+    const backBtn = toDom('button', { className: 'back-btn' }, ['← Voltar à Galeria']);
+    backBtn.addEventListener('click', () => showView('all')); // Ou podes voltar à categoria anterior se preferires
+    container.appendChild(backBtn);
+
+    // 2. Contentor de Detalhes (Flexbox)
+    const detailsWrapper = toDom('div', { className: 'details-wrapper' });
+
+    // --- Coluna da Esquerda: Imagem ---
+    const imgCol = toDom('div', { className: 'details-image-col' }, [
+        toDom('img', { src: orchid.src, alt: orchid.name, className: 'details-img' })
+    ]);
+
+    // --- Coluna da Direita: Informação ---
+    const infoCol = toDom('div', { className: 'details-info-col' }, [
+        toDom('h2', { className: 'details-title' }, [orchid.name]),
+        
+        // Lista de Características
+        createDetailItem('Género:', orchid.genus.description),
+        createDetailItem('Tipo:', orchid.type.description),
+        createDetailItem('Luminosidade:', orchid.luminosity.description),
+        createDetailItem('Temperatura:', orchid.temperature.description),
+        createDetailItem('Humidade:', orchid.humidity.description),
+        createDetailItem('Tamanho:', orchid.size.description),
+    ]);
+
+    // Adicionar Botões de Ação (Editar/Apagar) também nesta página
+    const actionsDiv = toDom('div', { className: 'details-actions' }, [
+        createActionButton('Editar', 'btn-edit', () => renderOrchidForm(container, orchid)),
+        createActionButton('Apagar', 'btn-delete', () => {
+             if (confirm('Tem a certeza que quer apagar esta orquídea?')) {
+                manager.removeOrchid(orchid.id);
+                showView('all'); // Volta à lista depois de apagar
+            }
+        })
+    ]);
+    infoCol.appendChild(actionsDiv);
+
+    // Juntar tudo
+    detailsWrapper.appendChild(imgCol);
+    detailsWrapper.appendChild(infoCol);
+    container.appendChild(detailsWrapper);
+}
+
+/**
+ * Helper para criar linhas de detalhe (Label: Valor)
+ */
+function createDetailItem(label, value) {
+    return toDom('p', { className: 'detail-item' }, [
+        toDom('strong', {}, [label + ' ']),
+        value
+    ]);
 }
