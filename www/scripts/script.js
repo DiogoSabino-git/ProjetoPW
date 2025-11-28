@@ -117,7 +117,7 @@ function showView(viewName) {
 
 
 function renderCategoryView(container, categoryType) {
-    // 1. Dicionário de Traduções
+    // Dicionário de Traduções
     const translations = {
         genus: 'Géneros',
         type: 'Tipos',
@@ -127,7 +127,7 @@ function renderCategoryView(container, categoryType) {
         size: 'Tamanho'
     };
 
-    // 2. Usar a tradução para o título (ou usar o original se não houver tradução)
+    // Usar a tradução para o título
     const titleText = translations[categoryType] || categoryType;
     
     container.appendChild(toDom('h2', { className: 'view-title' }, [titleText]));
@@ -159,8 +159,6 @@ function renderCategoryView(container, categoryType) {
             // Get the main container
             const main = document.getElementById('main-container');
             
-            // CORREÇÃO TAMBÉM AQUI: Usar o nome traduzido no título da galeria filtrada
-            // Exemplo: "Géneros: Cattleya" em vez de "Genus: Cattleya"
             const ptLabel = translations[categoryType] || categoryType;
             const title = `${ptLabel}: ${item.description}`;
             
@@ -177,30 +175,26 @@ const ITEMS_PER_PAGE = 25;
 
 /**
  * Renders the Grid of Orchids with Pagination
- * @param {HTMLElement} container - The main container
- * @param {Array} fullList - The COMPLETE list of orchids to filter/paginate
- * @param {string} title - Title for the view
- * @param {number} currentPage - The current page number (defaults to 1)
  */
 function renderOrchidGallery(container, fullList, title, currentPage = 1) {
     container.replaceChildren();
     
-    // 1. Título
+    // Título
     container.appendChild(toDom('h2', { className: 'view-title' }, [title]));
 
-    // 2. Botão Adicionar
+    // Botão Adicionar
     const createBtn = toDom('button', { className: 'create-btn' }, ['+ Adicionar Nova']);
     createBtn.addEventListener('click', () => renderOrchidForm(container));
     container.appendChild(createBtn);
 
-    // 3. Lógica de Paginação (Calcular a "fatia" a mostrar)
+    // Lógica de Paginação
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
     
     // Criamos uma sub-lista apenas com os itens desta página
     const paginatedList = fullList.slice(startIndex, endIndex);
 
-    // 4. Grelha
+    // Grelha
     const grid = toDom('div', { className: 'orchid-grid' });
 
     if (paginatedList.length === 0) {
@@ -226,21 +220,21 @@ function renderOrchidGallery(container, fullList, title, currentPage = 1) {
 
     container.appendChild(grid);
 
-    // 5. Adicionar Controlos de Paginação (Só se houver mais do que 1 página)
+    // Adicionar Controlos de Paginação
     if (fullList.length > ITEMS_PER_PAGE) {
         renderPaginationControls(container, fullList, title, currentPage);
     }
 }
 
 /**
- * Helper para desenhar os botões de página (1, 2, 3, Próximo...)
+ * Helper para desenhar os botões de página
  */
 function renderPaginationControls(container, fullList, title, currentPage) {
     const totalPages = Math.ceil(fullList.length / ITEMS_PER_PAGE);
     
     const paginationWrapper = toDom('div', { className: 'pagination-wrapper' });
 
-    // Botão "Anterior" (<)
+    // Botão "Anterior"
     const prevBtn = toDom('button', { className: 'page-btn prev-next' }, ['<']);
     if (currentPage === 1) prevBtn.disabled = true;
     prevBtn.addEventListener('click', () => {
@@ -248,7 +242,7 @@ function renderPaginationControls(container, fullList, title, currentPage) {
     });
     paginationWrapper.appendChild(prevBtn);
 
-    // Números das Páginas (1, 2, 3...)
+    // Números das Páginas
     for (let i = 1; i <= totalPages; i++) {
         const pageBtn = toDom('button', { className: 'page-btn' }, [i]);
         
@@ -453,7 +447,7 @@ function handleFormSubmit(e, form, orchidToEdit) {
 }
 
 /**
- * Renders the About View (With Photos)
+ * Renders the About View
  */
 function renderAboutView(container) {
     container.replaceChildren();
@@ -527,20 +521,20 @@ function createSocialLink(label, url) {
 function renderOrchidDetails(container, orchid) {
     container.replaceChildren();
 
-    // 1. Botão de Voltar
+    // Botão de Voltar
     const backBtn = toDom('button', { className: 'back-btn' }, ['← Voltar à Galeria']);
-    backBtn.addEventListener('click', () => showView('all')); // Ou podes voltar à categoria anterior se preferires
+    backBtn.addEventListener('click', () => showView('all'));
     container.appendChild(backBtn);
 
-    // 2. Contentor de Detalhes (Flexbox)
+    // Contentor de Detalhes
     const detailsWrapper = toDom('div', { className: 'details-wrapper' });
 
-    // --- Coluna da Esquerda: Imagem ---
+    // Coluna da Esquerda: Imagem
     const imgCol = toDom('div', { className: 'details-image-col' }, [
         toDom('img', { src: orchid.src, alt: orchid.name, className: 'details-img' })
     ]);
 
-    // --- Coluna da Direita: Informação ---
+    // Coluna da Direita: Informação
     const infoCol = toDom('div', { className: 'details-info-col' }, [
         toDom('h2', { className: 'details-title' }, [orchid.name]),
         
@@ -553,7 +547,7 @@ function renderOrchidDetails(container, orchid) {
         createDetailItem('Tamanho:', orchid.size.description),
     ]);
 
-    // Adicionar Botões de Ação (Editar/Apagar) também nesta página
+    //Adicionar Botões de Ação (Editar/Apagar) também nesta página
     const actionsDiv = toDom('div', { className: 'details-actions' }, [
         createActionButton('Editar', 'btn-edit', () => renderOrchidForm(container, orchid)),
         createActionButton('Apagar', 'btn-delete', () => {
@@ -565,7 +559,7 @@ function renderOrchidDetails(container, orchid) {
     ]);
     infoCol.appendChild(actionsDiv);
 
-    // Juntar tudo
+    //Juntar tudo
     detailsWrapper.appendChild(imgCol);
     detailsWrapper.appendChild(infoCol);
     container.appendChild(detailsWrapper);
