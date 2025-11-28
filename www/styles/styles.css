@@ -236,69 +236,120 @@ body {
     text-align: center;
 }
 
+/* --- About / Team Section --- */
+
 .view-title {
     text-align: center;
-    color: #2E8B57; /* Theme Green */
-    margin: 30px 0 20px 0;
+    color: #2E8B57;
+    margin: 30px 0 40px 0;
     font-size: 2rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-/* Grelha da Equipa - Vertical e Espaçada */
+/* 1. The Grid (Layout) */
 .team-grid {
     display: flex;
-    flex-direction: column; /* Um por cima do outro para ocupar altura */
-    align-items: center;    /* Centrar tudo */
-    gap: 40px;              /* Espaço grande entre cada pessoa */
-    margin-top: 20px;
+    flex-direction: column; /* Stack cards vertically */
+    align-items: center;    /* Center everything */
+    gap: 60px;              /* Big space between team members */
     margin-bottom: 60px;
 }
 
-/* O Bloco de cada pessoa */
+/* 2. The Card (Container for one person) */
 .team-card {
     text-align: center;
-    max-width: 600px; /* Largura maior para leitura confortável */
+    max-width: 600px;
     width: 100%;
+    padding: 20px;
+    /* Optional: Add a subtle border or background if you want cards to pop */
+    /* background-color: #fff; */
+    /* border-radius: 15px; */
+    /* box-shadow: 0 4px 15px rgba(0,0,0,0.05); */
 }
 
-/* Tipografia Mais Impactante */
+/* 3. The Photo */
+.team-photo-container {
+    margin-bottom: 25px; /* Space between photo and name */
+    display: flex;
+    justify-content: center;
+}
+
+.team-photo {
+    width: 180px;       /* Good size for profile pics */
+    height: 180px;
+    border-radius: 50%; /* Circle */
+    object-fit: cover;  /* Crop image nicely */
+    border: 4px solid #2E8B57;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+.team-photo:hover {
+    transform: scale(1.05);
+}
+
+/* 4. The Text Info */
 .team-info h3 {
     color: #2E8B57;
-    margin-bottom: 10px;
-    font-size: 2rem; /* Nome muito maior */
-    font-weight: normal; /* Estilo mais leve e moderno */
-    letter-spacing: 2px; /* Espaçamento entre letras */
+    margin: 0 0 10px 0;
+    font-size: 2.2rem;
+    font-weight: normal;
     text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .team-number {
-    color: #bbb; /* Cinzento muito claro */
-    font-size: 1rem;
+    color: #aaa;        /* Light grey for the student number */
+    font-size: 1.1rem;
     margin-bottom: 15px;
     letter-spacing: 1px;
-}
-
-.team-role {
     font-weight: bold;
-    color: #333;
-    font-size: 1.2rem; /* Função maior */
-    margin-bottom: 15px;
 }
 
-.team-interests {
-    font-size: 1.1rem; /* Texto de interesses maior */
-    color: #666;
-    margin-bottom: 25px;
-    line-height: 1.6;
-}
-
-/* Links Sociais */
+/* 5. Social Links */
 .team-social {
     display: flex;
     justify-content: center;
-    gap: 30px; /* Mais espaço entre os links */
+    gap: 20px;
+}
+
+.social-link {
+    text-decoration: none;
+    color: white;
+    background-color: #3CB371; /* Medium Sea Green */
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.social-link:hover {
+    background-color: #2E8B57; /* Darker green on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* --- Team Photos --- */
+.team-photo-container {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.team-photo {
+    width: 150px;       /* Fixed size */
+    height: 150px;      /* Fixed size */
+    border-radius: 50%; /* Makes it a perfect circle */
+    object-fit: cover;  /* Ensures the photo doesn't stretch */
+    border: 4px solid #2E8B57; /* Green border matching theme */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+.team-photo:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
 }
 
 .social-link {

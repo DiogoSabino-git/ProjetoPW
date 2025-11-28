@@ -374,52 +374,55 @@ function handleFormSubmit(e, form, orchidToEdit) {
 }
 
 /**
- * Renders the About View (Version without Photos)
+ * Renders the About View (With Photos)
  */
 function renderAboutView(container) {
     container.replaceChildren();
     
     container.appendChild(toDom('h2', { className: 'view-title' }, ['Sobre a Equipa']));
 
-    // 1. Dados dos Autores (Sem fotos)
+    //Dados dos Autores
     const authors = [
         {
             name: "O Teu Nome",
             number: "202100001",
-            role: "Full Stack Developer",
-            interests: "Orquídeas, JavaScript, Gaming",
+            photo: "images/authors/student1.jpg",
             social: {
                 linkedin: "https://linkedin.com",
-                github: "https://github.com"
+                github: "https://github.com/Rodry010"
             }
         },
         {
-            name: "Nome do Colega",
-            number: "202100002",
-            role: "UI/UX Designer",
-            interests: "Design, Fotografia, Natureza",
+            name: "Diogo Sabino",
+            number: "202300149",
+            photo: "/www/images/Authors/bino.png",
             social: {
                 linkedin: "https://linkedin.com",
-                github: "https://github.com"
+                github: "https://github.com/DiogoSabino-git"
             }
         }
     ];
 
-    // 2. Criar Grelha
+    //Criar Grelha
     const teamGrid = toDom('div', { className: 'team-grid' });
 
     authors.forEach(author => {
         const card = toDom('div', { className: 'team-card' }, [
-            // Removida a parte da imagem (<img>)
+            //Foto do Autor
+            toDom('div', { className: 'team-photo-container' }, [
+                toDom('img', { 
+                    src: author.photo, 
+                    alt: author.name, 
+                    className: 'team-photo' 
+                })
+            ]),
             
-            // Info
+            //Info
             toDom('div', { className: 'team-info' }, [
                 toDom('h3', {}, [author.name]),
                 toDom('p', { className: 'team-number' }, [`Nº ${author.number}`]),
-                toDom('p', { className: 'team-role' }, [author.role]),
-                toDom('p', { className: 'team-interests' }, [`Interesses: ${author.interests}`]),
                 
-                // Links Sociais
+                //Links Sociais
                 toDom('div', { className: 'team-social' }, [
                     createSocialLink('LinkedIn', author.social.linkedin),
                     createSocialLink('GitHub', author.social.github)
