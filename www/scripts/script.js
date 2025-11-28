@@ -449,9 +449,9 @@ function renderAboutView(container) {
     //Dados dos Autores
     const authors = [
         {
-            name: "O Teu Nome",
-            number: "202100001",
-            photo: "images/authors/student1.jpg",
+            name: "Rodrigo Antunes",
+            number: "2023151048",
+            photo: "/www/images/authors/Antunes.jpg",
             social: {
                 linkedin: "https://linkedin.com",
                 github: "https://github.com/Rodry010"
