@@ -1,14 +1,26 @@
 /* Basic Reset */
-body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+body { 
+    font-family: Arial, sans-serif; 
+    margin: 0; 
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
 /* Header & Nav */
 .app-header { background-color: #2E8B57; color: white; padding: 1rem; text-align: center; }
-.app-nav { background-color: #3CB371; padding: 10px; display: flex; justify-content: center; gap: 10px; }
+.app-nav { background-color: #3CB371; padding: 10px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
 .nav-btn { padding: 10px 20px; background: none; border: none; color: white; cursor: pointer; font-size: 1rem; font-weight: bold; }
 .nav-btn:hover, .nav-btn.active { background-color: rgba(255,255,255,0.3); border-radius: 5px; }
 
 /* Main Container */
-#main-container { padding: 20px; min-height: 60vh; padding-bottom: 100px;}
+#main-container { 
+    padding: 20px;
+    flex: 1; 
+    width: 100%;
+    box-sizing: border-box;
+}
 
 /* Category Grid */
 .category-grid {
@@ -37,7 +49,12 @@ body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
     background-color: #f0fdf4;
 }
 
-.app-footer { background-color: #2E8B57; color: white; text-align: center; padding: 10px; position: fixed; bottom: 0; width: 100%; }
+.app-footer { 
+    background-color: #2E8B57; 
+    color: white; 
+    text-align: center; 
+    padding: 15px;
+}
 
 /* Orchid Grid Layout */
 .orchid-grid {
@@ -206,30 +223,11 @@ body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
 }
 
 .authors-list li {
-    background-color: #f9f9f9;
-    margin: 10px auto;
-    padding: 15px;
-    border-radius: 8px;
-    width: 80%; /* Width of the name box */
-    font-weight: bold;
+    padding: 10px;
+    font-size: 1.1rem;
     color: #333;
-    border-left: 5px solid #2E8B57; /* Green accent on the left */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease;
-}
-
-.authors-list li:hover {
-    transform: translateX(5px); /* Slide slightly on hover */
-    background-color: #f0fff4; /* Very light green on hover */
-}
-
-.tech-stack {
-    margin-top: 40px;
-    font-size: 0.9rem;
-    color: #777;
-    border-top: 1px solid #eee;
-    padding-top: 20px;
-    font-style: italic;
+    list-style-type: none; /* Keeps bullets hidden */
+    text-align: center;
 }
 
 .view-title {
@@ -240,4 +238,91 @@ body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
+}
+
+/* Grelha da Equipa - Vertical e Espaçada */
+.team-grid {
+    display: flex;
+    flex-direction: column; /* Um por cima do outro para ocupar altura */
+    align-items: center;    /* Centrar tudo */
+    gap: 40px;              /* Espaço grande entre cada pessoa */
+    margin-top: 20px;
+    margin-bottom: 60px;
+}
+
+/* O Bloco de cada pessoa */
+.team-card {
+    text-align: center;
+    max-width: 600px; /* Largura maior para leitura confortável */
+    width: 100%;
+}
+
+/* Tipografia Mais Impactante */
+.team-info h3 {
+    color: #2E8B57;
+    margin-bottom: 10px;
+    font-size: 2rem; /* Nome muito maior */
+    font-weight: normal; /* Estilo mais leve e moderno */
+    letter-spacing: 2px; /* Espaçamento entre letras */
+    text-transform: uppercase;
+}
+
+.team-number {
+    color: #bbb; /* Cinzento muito claro */
+    font-size: 1rem;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.team-role {
+    font-weight: bold;
+    color: #333;
+    font-size: 1.2rem; /* Função maior */
+    margin-bottom: 15px;
+}
+
+.team-interests {
+    font-size: 1.1rem; /* Texto de interesses maior */
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+/* Links Sociais */
+.team-social {
+    display: flex;
+    justify-content: center;
+    gap: 30px; /* Mais espaço entre os links */
+}
+
+.social-link {
+    text-decoration: none;
+    color: #2E8B57;
+    font-size: 1.1rem;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+}
+
+.social-link:hover {
+    border-bottom: 1px solid #2E8B57; /* Linha subtil ao passar o rato */
+}
+
+@media (max-width: 600px) {
+    .view-title {
+        font-size: 1.5rem; /* Títulos mais pequenos */
+    }
+    
+    .nav-btn {
+        padding: 8px 12px; /* Botões mais fáceis de tocar */
+        font-size: 0.9rem;
+        flex-grow: 1; /* Botões esticam para encher a largura */
+    }
+
+    #main-container {
+        padding: 10px; /* Menos margem lateral para aproveitar espaço */
+    }
+
+    .team-grid {
+        gap: 40px; /* Menos espaço entre autores */
+    }
 }
