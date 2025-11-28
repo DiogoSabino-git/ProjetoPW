@@ -252,14 +252,14 @@ function renderPaginationControls(container, fullList, title, currentPage) {
         }
 
         pageBtn.addEventListener('click', () => {
-            // Volta a chamar a galeria, mas agora forçando a página 'i'
+            // Volta a chamar a galeria, mas agora força a página 'i'
             renderOrchidGallery(container, fullList, title, i);
         });
 
         paginationWrapper.appendChild(pageBtn);
     }
 
-    // Botão "Próximo" (>)
+    // Botão "Próximo"
     const nextBtn = toDom('button', { className: 'page-btn prev-next' }, ['>']);
     if (currentPage === totalPages) nextBtn.disabled = true;
     nextBtn.addEventListener('click', () => {
@@ -353,7 +353,7 @@ function createSelectBlock(labelText, name, optionsList, selectedId = null) {
         optionsList.forEach(item => {
             const optionAttrs = { value: item.id };
             
-            //Check if this option is the selected one (using loose equality == for string/number match)
+            //Check if this option is the selected one
             if (selectedId != null && item.id == selectedId) {
                 optionAttrs.selected = true;
             }
