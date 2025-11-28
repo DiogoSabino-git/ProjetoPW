@@ -66,7 +66,7 @@ function buildLayout() {
 
     //Footer
     const footer = toDom('footer', { className: 'app-footer' }, [
-        toDom('p', {}, ['About © Tecnologia Setúbal • Programação Web'])
+        toDom('p', {}, ['2025 Orquídeas para Todos - Programação Web'])
     ]);
 
     document.body.append(header, nav, main, footer);
@@ -458,7 +458,7 @@ function renderAboutView(container) {
     const authors = [
         {
             name: "Rodrigo Antunes",
-            number: "2023151048",
+            number: "2024151048",
             photo: "/www/images/authors/Antunes.jpg",
             social: {
                 linkedin: "https://linkedin.com",
