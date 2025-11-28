@@ -401,22 +401,67 @@ function handleFormSubmit(e, form, orchidToEdit) {
 }
 
 /**
- * Renders the About View (Static Content)
+ * Renders the About View (Version without Photos)
  */
 function renderAboutView(container) {
     container.replaceChildren();
     
-    container.appendChild(toDom('h2', { className: 'view-title' }, ['Sobre o Projeto']));
+    container.appendChild(toDom('h2', { className: 'view-title' }, ['Sobre a Equipa']));
 
-    const content = toDom('div', { className: 'about-content' }, [
-        toDom('p', {}, ['Este projeto foi desenvolvido no âmbito da disciplina de Programação Web.']),
-        toDom('h3', {}, ['Autores:']),
-        toDom('ul', { className: 'authors-list' }, [
-            toDom('li', {}, ['Seu Nome Aqui - Nº de Estudante']),
-            toDom('li', {}, ['Nome do Colega (se houver)'])
-        ]),
-        toDom('p', { className: 'tech-stack' }, ['Tecnologias: HTML, CSS, JavaScript (DOM Manually)'])
-    ]);
+    // 1. Dados dos Autores (Sem fotos)
+    const authors = [
+        {
+            name: "O Teu Nome",
+            number: "202100001",
+            role: "Full Stack Developer",
+            interests: "Orquídeas, JavaScript, Gaming",
+            social: {
+                linkedin: "https://linkedin.com",
+                github: "https://github.com"
+            }
+        },
+        {
+            name: "Nome do Colega",
+            number: "202100002",
+            role: "UI/UX Designer",
+            interests: "Design, Fotografia, Natureza",
+            social: {
+                linkedin: "https://linkedin.com",
+                github: "https://github.com"
+            }
+        }
+    ];
 
-    container.appendChild(content);
+    // 2. Criar Grelha
+    const teamGrid = toDom('div', { className: 'team-grid' });
+
+    authors.forEach(author => {
+        const card = toDom('div', { className: 'team-card' }, [
+            // Removida a parte da imagem (<img>)
+            
+            // Info
+            toDom('div', { className: 'team-info' }, [
+                toDom('h3', {}, [author.name]),
+                toDom('p', { className: 'team-number' }, [`Nº ${author.number}`]),
+                toDom('p', { className: 'team-role' }, [author.role]),
+                toDom('p', { className: 'team-interests' }, [`Interesses: ${author.interests}`]),
+                
+                // Links Sociais
+                toDom('div', { className: 'team-social' }, [
+                    createSocialLink('LinkedIn', author.social.linkedin),
+                    createSocialLink('GitHub', author.social.github)
+                ])
+            ])
+        ]);
+        teamGrid.appendChild(card);
+    });
+
+    container.appendChild(teamGrid);
+}
+
+/**
+ * Helper para criar links sociais
+ */
+function createSocialLink(label, url) {
+    return toDom('a', { href: url, target: '_blank', className: 'social-link' }, [label]);
 }
