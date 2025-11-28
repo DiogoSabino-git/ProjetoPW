@@ -159,33 +159,49 @@ function renderCategoryView(container, categoryType) {
     container.appendChild(grid);
 }
 
-function renderOrchidGallery(container, orchidList, title) {
+const ITEMS_PER_PAGE = 25;
+
+/**
+ * Renders the Grid of Orchids with Pagination
+ * @param {HTMLElement} container - The main container
+ * @param {Array} fullList - The COMPLETE list of orchids to filter/paginate
+ * @param {string} title - Title for the view
+ * @param {number} currentPage - The current page number (defaults to 1)
+ */
+function renderOrchidGallery(container, fullList, title, currentPage = 1) {
     container.replaceChildren();
     
-    // Título
+    // 1. Título
     container.appendChild(toDom('h2', { className: 'view-title' }, [title]));
 
-    const createBtn = toDom('button', { className: 'create-btn' }, ['Adicionar Orquídea']);
+    // 2. Botão Adicionar
+    const createBtn = toDom('button', { className: 'create-btn' }, ['+ Adicionar Nova']);
     createBtn.addEventListener('click', () => renderOrchidForm(container));
     container.appendChild(createBtn);
 
-    // Grelha
+    // 3. Lógica de Paginação (Calcular a "fatia" a mostrar)
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    
+    // Criamos uma sub-lista apenas com os itens desta página
+    const paginatedList = fullList.slice(startIndex, endIndex);
+
+    // 4. Grelha
     const grid = toDom('div', { className: 'orchid-grid' });
 
-    if (orchidList.length === 0) {
+    if (paginatedList.length === 0) {
         container.appendChild(toDom('p', { className: 'no-data' }, ['Nenhuma orquídea encontrada.']));
+        // Se a lista estiver vazia, não desenhamos paginação
         return;
     }
 
-    orchidList.forEach(orchid => {
-        // O cartão é agora apenas um bloco de texto clicável
-        const card = toDom('div', { className: 'orchid-card text-only' }); // Adicionei classe 'text-only' para ajudar no CSS
+    paginatedList.forEach(orchid => {
+        const card = toDom('div', { className: 'orchid-card text-only' });
         
         card.addEventListener('click', () => {
             renderOrchidDetails(container, orchid);
         });
 
-        // Apenas o Nome (Sem Imagem)
         const infoContainer = toDom('div', { className: 'card-info' }, [
             toDom('h3', {}, [orchid.name])
         ]);
@@ -195,6 +211,55 @@ function renderOrchidGallery(container, orchidList, title) {
     });
 
     container.appendChild(grid);
+
+    // 5. Adicionar Controlos de Paginação (Só se houver mais do que 1 página)
+    if (fullList.length > ITEMS_PER_PAGE) {
+        renderPaginationControls(container, fullList, title, currentPage);
+    }
+}
+
+/**
+ * Helper para desenhar os botões de página (1, 2, 3, Próximo...)
+ */
+function renderPaginationControls(container, fullList, title, currentPage) {
+    const totalPages = Math.ceil(fullList.length / ITEMS_PER_PAGE);
+    
+    const paginationWrapper = toDom('div', { className: 'pagination-wrapper' });
+
+    // Botão "Anterior" (<)
+    const prevBtn = toDom('button', { className: 'page-btn prev-next' }, ['<']);
+    if (currentPage === 1) prevBtn.disabled = true;
+    prevBtn.addEventListener('click', () => {
+        renderOrchidGallery(container, fullList, title, currentPage - 1);
+    });
+    paginationWrapper.appendChild(prevBtn);
+
+    // Números das Páginas (1, 2, 3...)
+    for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = toDom('button', { className: 'page-btn' }, [i]);
+        
+        // Destacar a página atual
+        if (i === currentPage) {
+            pageBtn.classList.add('active');
+        }
+
+        pageBtn.addEventListener('click', () => {
+            // Volta a chamar a galeria, mas agora forçando a página 'i'
+            renderOrchidGallery(container, fullList, title, i);
+        });
+
+        paginationWrapper.appendChild(pageBtn);
+    }
+
+    // Botão "Próximo" (>)
+    const nextBtn = toDom('button', { className: 'page-btn prev-next' }, ['>']);
+    if (currentPage === totalPages) nextBtn.disabled = true;
+    nextBtn.addEventListener('click', () => {
+        renderOrchidGallery(container, fullList, title, currentPage + 1);
+    });
+    paginationWrapper.appendChild(nextBtn);
+
+    container.appendChild(paginationWrapper);
 }
 
 /**

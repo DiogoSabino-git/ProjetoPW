@@ -59,7 +59,7 @@ body {
 /* Grelha de Orquídeas */
 .orchid-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+    grid-template-columns: repeat(5, 1fr); 
     gap: 15px;
     padding: 10px 0;
 }
@@ -331,6 +331,22 @@ body {
     .team-grid {
         gap: 40px; /* Menos espaço entre autores */
     }
+
+    .orchid-grid {
+        grid-template-columns: repeat(2, 1fr); /* Passa a 2 colunas no telemóvel */
+    }
+}
+
+@media (max-width: 1200px) {
+    .orchid-grid {
+        grid-template-columns: repeat(4, 1fr); /* Passa a 4 colunas */
+    }
+}
+
+@media (max-width: 900px) {
+    .orchid-grid {
+        grid-template-columns: repeat(3, 1fr); /* Passa a 3 colunas */
+    }
 }
 
 /* --- Página de Detalhes --- */
@@ -409,4 +425,48 @@ body {
     margin-top: 30px;
     display: flex;
     gap: 15px;
+}
+
+/* --- Paginação --- */
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.page-btn {
+    background-color: white;
+    border: 1px solid #ddd;
+    color: #333;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+    min-width: 40px; /* Garante que os números não ficam esmagados */
+}
+
+.page-btn:hover:not(:disabled) {
+    background-color: #f0fdf4; /* Verde muito claro */
+    border-color: #2E8B57;
+    color: #2E8B57;
+}
+
+/* Página Ativa (A que estás a ver agora) */
+.page-btn.active {
+    background-color: #2E8B57;
+    color: white;
+    border-color: #2E8B57;
+    font-weight: bold;
+    cursor: default; /* Não clica se já estiver ativa */
+}
+
+/* Botões Anterior/Próximo desativados */
+.page-btn:disabled {
+    color: #ccc;
+    border-color: #eee;
+    cursor: not-allowed;
+    background-color: #f9f9f9;
 }
