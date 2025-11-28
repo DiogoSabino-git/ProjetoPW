@@ -117,11 +117,22 @@ function showView(viewName) {
 
 
 function renderCategoryView(container, categoryType) {
-    //Title
-    const titleText = categoryType.charAt(0).toUpperCase() + categoryType.slice(1);
+    // 1. Dicionário de Traduções
+    const translations = {
+        genus: 'Géneros',
+        type: 'Tipos',
+        luminosity: 'Luminosidade',
+        temperature: 'Temperatura',
+        humidity: 'Humidade',
+        size: 'Tamanho'
+    };
+
+    // 2. Usar a tradução para o título (ou usar o original se não houver tradução)
+    const titleText = translations[categoryType] || categoryType;
+    
     container.appendChild(toDom('h2', { className: 'view-title' }, [titleText]));
 
-    //Determine which list to fetch from the Manager
+    // Determine which list to fetch from the Manager
     let list = [];
     switch (categoryType) {
         case 'genus': list = manager.genusList; break;
@@ -132,24 +143,27 @@ function renderCategoryView(container, categoryType) {
         case 'size': list = manager.sizeList; break;
     }
 
-    //Create the Grid Container
+    // Create the Grid Container
     const grid = toDom('div', { className: 'category-grid' });
 
-    //Loop through the data and create cards
+    // Loop through the data and create cards
     list.forEach(item => {
         const card = toDom('div', { className: 'category-card' }, [
             toDom('h3', {}, [item.description])
         ]);
 
         card.addEventListener('click', function() {
-            //Get the filtered list from the Manager
+            // Get the filtered list from the Manager
             const filteredList = manager.getByCategory(categoryType, item.id);
             
-            //Get the main container
+            // Get the main container
             const main = document.getElementById('main-container');
             
-            //Render the Gallery with the filtered list
-            const title = `${categoryType.charAt(0).toUpperCase() + categoryType.slice(1)}: ${item.description}`;
+            // CORREÇÃO TAMBÉM AQUI: Usar o nome traduzido no título da galeria filtrada
+            // Exemplo: "Géneros: Cattleya" em vez de "Genus: Cattleya"
+            const ptLabel = translations[categoryType] || categoryType;
+            const title = `${ptLabel}: ${item.description}`;
+            
             renderOrchidGallery(main, filteredList, title);
         });
 
