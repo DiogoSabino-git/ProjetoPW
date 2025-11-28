@@ -5,14 +5,12 @@ class Entity {
     #id;
 
     constructor(id) {
-        // FIX: We check strictly for null or undefined, so '0' is allowed
         if (id === undefined || id === null) {
              throw new Error("ID is required for an Entity.");
         }
         this.#id = id;
     }
 
-    // ... keep the rest of the class the same (getters/setters) ...
     get id() { return this.#id; }
 
     set id(newId) {
@@ -160,43 +158,36 @@ class OrchidManager {
     addOrchid(newOrchid) {
         console.log("--> Manager: Attempting to add orchid...", newOrchid.name);
 
-        // 1. Check uniqueness
+        //Check uniqueness
         const exists = this.#orchids.some(o => o.name.toLowerCase() === newOrchid.name.toLowerCase());
         if (exists) {
             console.error("--> Manager: Duplicate found!");
             throw new Error("An orchid with this name already exists."); 
         }
 
-        // 2. Generate ID
+        //Generate ID
         const maxId = this.#orchids.reduce((max, orchid) => (orchid.id > max ? orchid.id : max), 0);
         const newId = maxId + 1;
         
         console.log("--> Manager: Generated new ID:", newId);
         
-        // 3. Set ID on the object
+        //Set ID on the object
         newOrchid.id = newId; 
 
-        // 4. Push to collection (THIS IS THE CRITICAL STEP)
+        //Push to collection (THIS IS THE CRITICAL STEP)
         this.#orchids.push(newOrchid);
         
         console.log("--> Manager: Pushed to list. New Count:", this.#orchids.length);
     }
 
-    /**
-     * Updates an existing Orchid.
-     * @param {number} id - The ID of the orchid to update
-     * @param {object} newDetails - Object containing the new raw values (from form)
-     */
     updateOrchid(id, newDetails) {
         const orchid = this.#orchids.find(o => o.id === id);
         if (!orchid) throw new Error(`Orchid with ID ${id} not found.`);
 
-        // Update simple properties
         orchid.name = newDetails.name;
         orchid.src = newDetails.src;
 
-        // Update characteristics (We must find the objects again based on the new IDs)
-        // Note: In a real app, we might helperize this lookup logic to avoid repetition
+        // Update characteristics
         if (newDetails.genus) orchid.genus = this.#genusList.find(x => x.id == newDetails.genus);
         if (newDetails.type) orchid.type = this.#typeList.find(x => x.id == newDetails.type);
         if (newDetails.luminosity) orchid.luminosity = this.#luminosityList.find(x => x.id == newDetails.luminosity);
@@ -209,11 +200,9 @@ class OrchidManager {
      * Removes an Orchid by ID.
      */
     removeOrchid(id) {
-        // Find the index of the orchid with this ID
         const index = this.#orchids.findIndex(o => o.id === id); 
         
         if (index !== -1) {
-            // Remove 1 item at that index
             this.#orchids.splice(index, 1); 
             console.log(`Manager: Removed orchid with ID ${id}. Remaining: ${this.#orchids.length}`);
         } else {

@@ -121,7 +121,7 @@ function renderCategoryView(container, categoryType) {
     const titleText = categoryType.charAt(0).toUpperCase() + categoryType.slice(1);
     container.appendChild(toDom('h2', { className: 'view-title' }, [titleText]));
 
-    // 2. Determine which list to fetch from the Manager
+    //Determine which list to fetch from the Manager
     let list = [];
     switch (categoryType) {
         case 'genus': list = manager.genusList; break;
@@ -132,10 +132,10 @@ function renderCategoryView(container, categoryType) {
         case 'size': list = manager.sizeList; break;
     }
 
-    // 3. Create the Grid Container
+    //Create the Grid Container
     const grid = toDom('div', { className: 'category-grid' });
 
-    // 4. Loop through the data and create cards
+    //Loop through the data and create cards
     list.forEach(item => {
         const card = toDom('div', { className: 'category-card' }, [
             toDom('h3', {}, [item.description])
@@ -192,9 +192,9 @@ function renderOrchidGallery(container, orchidList, title) {
             // Info Container
             toDom('div', { className: 'card-info' }, [
                 toDom('h3', {}, [orchid.name]),
-                toDom('p', { className: 'card-subtitle' }, [orchid.genus.description]) // Display Genus name
+                toDom('p', { className: 'card-subtitle' }, [orchid.genus.description])
             ]),
-            // Action Buttons (Placeholder for Edit/Delete)
+            // Action Buttons
             toDom('div', { className: 'card-actions' }, [
                 createActionButton('Edit', 'btn-edit', (e) => {
                 e.stopPropagation();
@@ -202,16 +202,15 @@ function renderOrchidGallery(container, orchidList, title) {
                 renderOrchidForm(container, orchid); 
             }),
                 createActionButton('Delete', 'btn-delete', (e) => {
-                        e.stopPropagation(); // Prevents opening the card details if we click delete
+                        e.stopPropagation();
                         
-                        // 1. Confirm with the user
+                        //Confirm with the user
                         if (confirm('Are you sure you want to delete this orchid?')) {
                             
-                            // 2. Remove from data
+                            //Remove from data
                             manager.removeOrchid(orchid.id);
                             
-                            // 3. Refresh the view to show the item is gone
-                            // We get the main container again to be safe
+                            //Refresh the view to show the item is gone
                             const main = document.getElementById('main-container');
                             renderOrchidGallery(main, manager.orchids, "Todas as Orquídeas");
                         }
@@ -243,17 +242,13 @@ function renderOrchidForm(container, orchidToEdit = null) {
     const title = orchidToEdit ? `Edit Orchid: ${orchidToEdit.name}` : "Create New Orchid";
     container.appendChild(toDom('h2', { className: 'view-title' }, [title]));
 
-    // 1. Create Form Element
     const form = toDom('form', { className: 'orchid-form', novalidate: true });
 
-    // 2. Name Input
     form.appendChild(createInputBlock('Name:', 'name', 'text', orchidToEdit?.name, true));
 
-    // 3. Image URL Input
     form.appendChild(createInputBlock('Photo URL:', 'src', 'text', orchidToEdit?.src || 'images/orchids/', true));
 
-    // 4. Dynamic Selects for Characteristics
-    // note: We use ?.id to safely get the ID only if orchidToEdit exists
+    //Dynamic Selects for Characteristics
     form.appendChild(createSelectBlock('Genus:', 'genus', manager.genusList, orchidToEdit?.genus?.id));
     form.appendChild(createSelectBlock('Type:', 'type', manager.typeList, orchidToEdit?.type?.id));
     form.appendChild(createSelectBlock('Luminosity:', 'luminosity', manager.luminosityList, orchidToEdit?.luminosity?.id));
@@ -261,11 +256,11 @@ function renderOrchidForm(container, orchidToEdit = null) {
     form.appendChild(createSelectBlock('Humidity:', 'humidity', manager.humidityList, orchidToEdit?.humidity?.id));
     form.appendChild(createSelectBlock('Size:', 'size', manager.sizeList, orchidToEdit?.size?.id));
 
-    // 5. Submit Button
+    //Submit Button
     const submitBtn = toDom('button', { type: 'submit', className: 'form-btn' }, ['Save Orchid']);
     form.appendChild(submitBtn);
 
-    // 6. Handle Submission
+    //Handle Submission
     form.addEventListener('submit', (e) => handleFormSubmit(e, form, orchidToEdit));
 
     container.appendChild(form);
@@ -278,15 +273,15 @@ function createInputBlock(labelText, name, type, value = '', required = false) {
     const wrapper = toDom('div', { className: 'form-group' });
     wrapper.appendChild(toDom('label', { for: name }, [labelText]));
     
-    // Create the input
+    //Create the input
     const input = toDom('input', { id: name, name: name, type: type });
     
-    // Set value if it exists
+    //Set value if it exists
     if (value) {
         input.value = value;
     }
 
-    // Set required if true
+    //Set required if true
     if (required) {
         input.required = true;
     }
@@ -304,15 +299,15 @@ function createSelectBlock(labelText, name, optionsList, selectedId = null) {
 
     const select = toDom('select', { id: name, name: name, required: true });
     
-    // Default empty option
+    //Default empty option
     select.appendChild(toDom('option', { value: '' }, ['-- Select --']));
 
-    // Populate options
+    //Populate options
     if (optionsList && Array.isArray(optionsList)) {
         optionsList.forEach(item => {
             const optionAttrs = { value: item.id };
             
-            // Check if this option is the selected one (using loose equality == for string/number match)
+            //Check if this option is the selected one (using loose equality == for string/number match)
             if (selectedId != null && item.id == selectedId) {
                 optionAttrs.selected = true;
             }
@@ -329,24 +324,24 @@ function handleFormSubmit(e, form, orchidToEdit) {
     e.preventDefault(); 
     console.log("--- START FORM SUBMISSION ---");
 
-    // 1. Check if Form Element exists
+    //Check if Form Element exists
     if (!form) {
         console.error("CRITICAL: Form element is undefined.");
         return;
     }
 
-    // 2. Validate HTML5 Constraints
+    //Validate HTML5 Constraints
     if (!form.checkValidity()) {
         console.warn("Form is invalid (HTML5 checks failed).");
         form.reportValidity();
         return;
     }
 
-    // 3. Log Raw Input Values (To see if Selects are working)
+    //Log Raw Input Values
     const rawGenus = form.elements['genus'].value;
-    console.log("Raw Genus Value:", rawGenus); // Should be a number like "1", "2"
+    console.log("Raw Genus Value:", rawGenus);
 
-    // 4. Gather Data
+    //Gather Data
     const formData = {
         name: form.elements['name'].value,
         src: form.elements['src'].value,
@@ -360,7 +355,7 @@ function handleFormSubmit(e, form, orchidToEdit) {
 
     console.log("Processed Form Data:", formData);
 
-    // 5. Check for NaNs (Not a Number)
+    //Check for NaNs
     if (isNaN(formData.genus)) {
         console.error("ERROR: Genus is NaN. Did you select an option?");
         alert("Please select all options.");
@@ -374,12 +369,11 @@ function handleFormSubmit(e, form, orchidToEdit) {
         } else {
             console.log("Mode: CREATE");
             
-            // Find objects (and log if they are found)
             const genusObj = manager.genusList.find(x => x.id == formData.genus);
             console.log("Found Genus Object:", genusObj);
 
             const newOrchid = new Orchid(
-                0, // Temp ID
+                0,
                 formData.name,
                 formData.src,
                 genusObj,
@@ -392,7 +386,6 @@ function handleFormSubmit(e, form, orchidToEdit) {
             
             console.log("New Orchid Object created:", newOrchid);
 
-            // Attempt to add to Manager
             manager.addOrchid(newOrchid);
             console.log("SUCCESS: Added to manager. Total Orchids:", manager.orchids.length);
         }
