@@ -3,14 +3,14 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f9f4; /* Light greenish background */
+    background-color: #f4f9f4;
     color: #333;
     line-height: 1.6;
 }
 
 /* Header & Navigation */
 header {
-    background-color: #2E8B57; /* SeaGreen */
+    background-color: #2E8B57;
     color: white;
     padding: 1rem;
     text-align: center;
@@ -26,7 +26,7 @@ nav ul {
     margin: 0;
     display: flex;
     justify-content: center;
-    flex-wrap: wrap; /* Responsive Menu [cite: 7969] */
+    flex-wrap: wrap;
     gap: 15px;
 }
 
@@ -73,7 +73,7 @@ main {
 
 .orchid-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive Grid */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
     margin-top: 15px;
 }
@@ -83,7 +83,7 @@ main {
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
-    display: flex; /* Horizontal card layout */
+    display: flex;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
@@ -145,7 +145,6 @@ footer {
     margin-top: 40px;
 }
 
-/* Mobile Adjustments [cite: 7969] */
 @media (max-width: 600px) {
     .orchid-card {
         flex-direction: column;
