@@ -166,7 +166,7 @@ function renderOrchidGallery(container, orchidList, title) {
     //Set Title
     container.appendChild(toDom('h2', { className: 'view-title' }, [title]));
 
-    const createBtn = toDom('button', { className: 'create-btn' }, ['+ Create New Orchid']);
+    const createBtn = toDom('button', { className: 'create-btn' }, ['Adicionar Orquídea']);
     createBtn.addEventListener('click', () => renderOrchidForm(container));
     container.appendChild(createBtn);
 
@@ -196,12 +196,12 @@ function renderOrchidGallery(container, orchidList, title) {
             ]),
             // Action Buttons
             toDom('div', { className: 'card-actions' }, [
-                createActionButton('Edit', 'btn-edit', (e) => {
+                createActionButton('Editar', 'btn-edit', (e) => {
                 e.stopPropagation();
                 // Call the form with the current orchid object
                 renderOrchidForm(container, orchid); 
             }),
-                createActionButton('Delete', 'btn-delete', (e) => {
+                createActionButton('Apagar', 'btn-delete', (e) => {
                         e.stopPropagation();
                         
                         //Confirm with the user
@@ -239,25 +239,25 @@ function createActionButton(text, className, onClick) {
 function renderOrchidForm(container, orchidToEdit = null) {
     container.replaceChildren();
 
-    const title = orchidToEdit ? `Edit Orchid: ${orchidToEdit.name}` : "Create New Orchid";
+    const title = orchidToEdit ? `Editar Orquídea: ${orchidToEdit.name}` : "Adicionar Nova Orquídea";
     container.appendChild(toDom('h2', { className: 'view-title' }, [title]));
 
     const form = toDom('form', { className: 'orchid-form', novalidate: true });
 
-    form.appendChild(createInputBlock('Name:', 'name', 'text', orchidToEdit?.name, true));
+    form.appendChild(createInputBlock('Nome:', 'name', 'text', orchidToEdit?.name, true));
 
-    form.appendChild(createInputBlock('Photo URL:', 'src', 'text', orchidToEdit?.src || 'images/orchids/', true));
+    form.appendChild(createInputBlock('Foto URL:', 'src', 'text', orchidToEdit?.src || 'images/orchids/', true));
 
     //Dynamic Selects for Characteristics
-    form.appendChild(createSelectBlock('Genus:', 'genus', manager.genusList, orchidToEdit?.genus?.id));
-    form.appendChild(createSelectBlock('Type:', 'type', manager.typeList, orchidToEdit?.type?.id));
-    form.appendChild(createSelectBlock('Luminosity:', 'luminosity', manager.luminosityList, orchidToEdit?.luminosity?.id));
-    form.appendChild(createSelectBlock('Temperature:', 'temperature', manager.temperatureList, orchidToEdit?.temperature?.id));
-    form.appendChild(createSelectBlock('Humidity:', 'humidity', manager.humidityList, orchidToEdit?.humidity?.id));
-    form.appendChild(createSelectBlock('Size:', 'size', manager.sizeList, orchidToEdit?.size?.id));
+    form.appendChild(createSelectBlock('Género:', 'genus', manager.genusList, orchidToEdit?.genus?.id));
+    form.appendChild(createSelectBlock('Tipo:', 'type', manager.typeList, orchidToEdit?.type?.id));
+    form.appendChild(createSelectBlock('Luminosidade:', 'luminosity', manager.luminosityList, orchidToEdit?.luminosity?.id));
+    form.appendChild(createSelectBlock('Temperatura:', 'temperature', manager.temperatureList, orchidToEdit?.temperature?.id));
+    form.appendChild(createSelectBlock('Humidade:', 'humidity', manager.humidityList, orchidToEdit?.humidity?.id));
+    form.appendChild(createSelectBlock('Tamanho:', 'size', manager.sizeList, orchidToEdit?.size?.id));
 
     //Submit Button
-    const submitBtn = toDom('button', { type: 'submit', className: 'form-btn' }, ['Save Orchid']);
+    const submitBtn = toDom('button', { type: 'submit', className: 'form-btn' }, ['Guardar']);
     form.appendChild(submitBtn);
 
     //Handle Submission
@@ -412,8 +412,8 @@ function renderAboutView(container) {
         toDom('p', {}, ['Este projeto foi desenvolvido no âmbito da disciplina de Programação Web.']),
         toDom('h3', {}, ['Autores:']),
         toDom('ul', { className: 'authors-list' }, [
-            toDom('li', {}, ['Seu Nome Aqui - Nº de Estudante']),
-            toDom('li', {}, ['Nome do Colega (se houver)'])
+            toDom('li', {}, ['Rodrigo Antunes - 2024151048']),
+            toDom('li', {}, ['Diogo Sabino - 202300149'])
         ]),
         toDom('p', { className: 'tech-stack' }, ['Tecnologias: HTML, CSS, JavaScript (DOM Manually)'])
     ]);
